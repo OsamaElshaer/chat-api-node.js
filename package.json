@@ -1,0 +1,24 @@
+{
+  "name": "chat-app-rest-api",
+  "version": "1.0.0",
+  "description": "chat app",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OsamaElshaer/chat-app.git"
+  },
+  "author": "osama elshaer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OsamaElshaer/chat-app/issues"
+  },
+  "homepage": "https://github.com/OsamaElshaer/chat-app#readme",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "mongodb": "^4.9.1",
+    "nodemon": "^2.0.19"
+  }
+}
