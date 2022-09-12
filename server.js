@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 
 //require from project
-const testRoute = require('./routes/test')
+const authRoutes = require('./routes/auth')
 const dbConnection = require('./utils/database').dbConnection
 
 //require packages
@@ -15,11 +15,11 @@ dotenv.config()
 
 
 // midellware
-app.use('', testRoute)
+app.use('', authRoutes)
 
 
+const port = process.env.PORT
 
 dbConnection(()=>{
-    const port = process.env.PORT
-    app.listen(port || 3000)
+    app.listen(port)
 })
