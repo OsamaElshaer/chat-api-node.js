@@ -2,8 +2,9 @@
 const express = require('express')
 const app = express()
 
-//require db connection
+//require from fiels
 const dbConnection = require('./utils/database').dbConnection
+const {isAuth} = require('./middleware/isAuth')
 
 //require packages
 const bodyParser = require('body-parser')
