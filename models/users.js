@@ -2,27 +2,20 @@ const {getDb} = require('../utils/database')
 const mongodb = require('mongodb')
 
 class User {
-    constructor(username, email,){
-        this.username=username,
+    constructor(email,password){
         this.email = email
+        this.password = password
     }
 
     save(){
-        getDb().collection('users').insertOne(this)
+        const db = getDb()
+        db.collection('users').insertOne(this)
     }
 
-    static getAll(){
-        getDb().collection('users').find()
+    static deleteById(userId){
+        const db = getDb()
+        db.collection('users').deleteOne({_id:userId})
     }
-
-    static getById(id){
-        getDb().collection('users').findOne({id:new mongodb.ObjectId(id)})
-    }
-
-    static deleteById(id){
-        getDb().collection('users').deleteOne({id:new mongodb.ObjectId(id)})
-    }
-
 }
 
 exports.User = User
