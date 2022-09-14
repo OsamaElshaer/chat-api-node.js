@@ -7,12 +7,15 @@ const nodemailer = require('nodemailer')
 const sendgridTransporter = require('nodemailer-sendgrid-transport')
 const mongoDb = require('mongodb')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+const { parseArgs } = require('util')
 
+require('dotenv').config()
 
 // create trarsporter to send mails
 const transporter = nodemailer.createTransport(sendgridTransporter({
     auth:{
-        api_key:'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'
+        api_key:process.env.API_KEY
     }
 }))
 
@@ -44,10 +47,7 @@ exports.singUp = (req,res,next)=>{
                     password = hash
                 )
                 user.save()
-                res.status(201).json({
-                    message:'you successfully signed up!',
-                    mailResponse : response
-                })
+
                 const emailInfo =                     
                 {
                     to:email,
@@ -59,9 +59,14 @@ exports.singUp = (req,res,next)=>{
                 transporter.sendMail(emailInfo,(err,response)=>{
                         if(err){
                             console.log(err)
-                            return;
+                            return res.status(503).json({
+                                error:err,
+                            })
                         }
-                        //res.json({})
+                        res.status(201).json({
+                            message:'you successfully signed up!',
+                            mailResponse : response
+                        })
                 })   
             })
             })
@@ -126,16 +131,128 @@ exports.logIn = (req,res,next)=>{
 
 }
 exports.logOut = (req,res,next)=>{
-
+    req.headers.authorization = ''
+    res.status(404).json({
+        message:"loged out"
+    })
 }
-exports.resetPassEmail = (req,res,next)=>{
-
+exports.resetPasswordEmail = (req,res,next)=>{
+    const email = req.body.email
+    const db = getDb()
+    db 
+        .collection('users').findOne({email:email})
+        .then(user=>{
+            if(!user){
+                return res.status(404).json({
+                    message:"email dos\'t exist"
+                })
+            }
+            crypto.randomBytes(32,(err,buffer)=>{
+                const resetToken = buffer.toString('hex')
+                if(err){
+                    return res.status(503).json({
+                        message:"this service unavailable right now  "
+                    })
+                }
+                user.token=resetToken
+                user.tokenEpire = Date.now() + 36e5
+                
+                db.collection('users').updateOne({email:user.email},{$set:user})
+                const emailInfo =                     
+                    {
+                        to:email,
+                        from:process.env.EMAIL,
+                        subject: 'Reset Password',
+                        html:`<a href="http://localhost:3000/resetPassword/${resetToken}"> click here to reset your password </a>`
+                    }
+                transporter.sendMail(emailInfo,(err,response)=>{
+                    if(err){
+                        return res.status(503).json({
+                            message:"this service unavailable right now ",
+                            error:err
+                        })
+                    }
+                    res.status(200).json({
+                        message:"check your eamil to reset password",
+                        response:response
+                    })
+                })
+                })
+        })
+        .catch(err=>{
+            return res.status(404).json({
+                message:err
+            })
+        })
 }
 exports.resetPassword = (req,res,next)=>{
-
+    const password = req.body.password.toString()
+    const resetToken = req.params.token
+    const db = getDb()
+    db  
+        .collection('users')
+        .findOne({token:resetToken})
+        .then(user=>{
+            console.log(user)
+            bcrypt.hash(password,10,(err,hashedPassword)=>{
+                if(err){
+                    return res.status(503).json({
+                        error: err
+                    })
+                }
+                db
+                    .collection('users')
+                    .updateOne({token:user.token},{$set:{password:hashedPassword}})
+                    return res.status(200).json({
+                        message: "reset password done"
+                    })
+            })
+        })
+        .catch(err=>{
+            res.status(500).json({
+                error : err
+            })
+        })
 }
-exports.deleteUser = (req,res,next)=>{
-
+exports.deleteAccount = (req,res,next)=>{
+    const userId = req.headers.user_id
+    try{
+        User
+        .deleteById(new mongoDb.ObjectId(userId))
+        return res.status(202).json({
+            message: "Account Deleted"
+        })
+    }catch(err){
+        res.status(503).json({
+            error:err
+        })
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

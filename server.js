@@ -31,6 +31,12 @@ app.use(cors())
 // midellware
 app.use('', authRoutes)
 
+app.use('/test',isAuth,(req,res,next)=>{
+    res.status(200).json({
+        message:'ok'
+    })
+})
+
 
 const port = process.env.PORT
 

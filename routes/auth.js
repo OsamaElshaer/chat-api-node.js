@@ -11,10 +11,10 @@ router.post('/signup', authController.singUp)
 router.post('/login',  authController.logIn)
 router.post('/logout', authController.logOut)
 
-router.post('/resetPassEmail', authController.resetPassEmail)
+router.post('/resetPassEmail', authController.resetPasswordEmail)
 router.patch('/resetPassword/:token', authController.resetPassword)
 
-router.delete('deleteUser/:userId', authController.deleteUser)
+router.delete('/deleteAccount', authController.deleteAccount)
 
 
 
