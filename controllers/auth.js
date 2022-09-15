@@ -8,7 +8,7 @@ const sendgridTransporter = require('nodemailer-sendgrid-transport')
 const mongoDb = require('mongodb')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
-const { parseArgs } = require('util')
+const { validationResult } = require('express-validator')
 
 require('dotenv').config()
 
@@ -24,6 +24,13 @@ exports.singUp = (req,res,next)=>{
     email = req.body.email
     password = req.body.password.toString()
     const db = getDb()
+
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+        return res.status(400).json({
+            error:errors.array()[0].msg
+        })
+    }
     db.
         collection('users')
         .find({email:email})
@@ -83,6 +90,12 @@ exports.logIn = (req,res,next)=>{
     const password = req.body.password.toString()
     const db = getDb()
 
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+        return res.status(400).json({
+            error:errors.array()[0].msg
+        })
+    }
     db
         .collection('users')
         .findOne({email:email})
