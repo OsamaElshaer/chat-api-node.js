@@ -15,6 +15,7 @@ router.post(
                 if(value !==req.body.password){
                     throw new Error('password have to match')
                 }
+                return true;
             }),
             authController.singUp
             )

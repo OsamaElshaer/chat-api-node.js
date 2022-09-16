@@ -13,6 +13,7 @@ const cors = require('cors');
 
 //require routes 
 const authRoutes = require('./routes/auth')
+const roomRoutes = require('./routes/room')
 
 
 // parse body
@@ -29,13 +30,9 @@ app.use(cors())
 
 
 // midellware
-app.use('', authRoutes)
+app.use('/user', authRoutes)
+app.use('/room', roomRoutes)
 
-app.use('/test',isAuth,(req,res,next)=>{
-    res.status(200).json({
-        message:'ok'
-    })
-})
 
 
 const port = process.env.PORT
