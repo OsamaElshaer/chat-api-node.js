@@ -1,19 +1,24 @@
 //setup server
 const express = require('express')
 const app = express()
+const http = require('http')
+const server = http.createServer(app)
 
 //require from fiels
-const dbConnection = require('./utils/database').dbConnection
+const dbConnection = require('./config/database').dbConnection
 const {isAuth} = require('./middleware/isAuth')
 
 //require packages
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
 const cors = require('cors');
-
+const path = require('path')
+const {init} = require('./config/socket.io')
+const io = init(server)
 //require routes 
 const authRoutes = require('./routes/auth')
 const roomRoutes = require('./routes/room')
+const { webSocket } = require('./utils/socket.io')
 
 
 // parse body
@@ -31,12 +36,22 @@ app.use(cors())
 
 // midellware
 app.use('/user', authRoutes)
-app.use('/room', roomRoutes)
+app.use('/room', isAuth ,roomRoutes)
+
+app.use(express.static(path.join(__dirname,'public')))
+
+app.use('*',(req,res,next)=>{
+    return res.status(404).json({
+        error:"API endpoint not found"
+    })
+})
 
 
+//socket
+new webSocket('osama','JavaScript').connection()
 
 const port = process.env.PORT
 
 dbConnection(()=>{
-    app.listen(port)
+    server.listen(port)
 })

@@ -1,6 +1,6 @@
 const { Room } = require("../models/Rooms")
 const { User } = require("../models/users")
-const { getDb } = require("../utils/database")
+const { getDb } = require("../config/database")
 const mongodb = require('mongodb')
 
 exports.create = async (req,res,next)=>{
@@ -27,6 +27,7 @@ exports.join = async (req,res,next)=>{
         const room = await Room.findById(roomId)
         const user = await User.findById(userId)
         room.users.push(user._id)
+        // condition to valif=date if userroom still there
         user.rooms.push(room._id)
         Room.update(room._id,room)
         User.update(user._id,user)
@@ -40,7 +41,7 @@ exports.join = async (req,res,next)=>{
         })
     }  
 }
-exports.leave = async (req,res,next)=>{
+exports.unjoin = async (req,res,next)=>{
     const roomId = req.body.roomId
     const userId = req.headers.user_id
     try {
@@ -62,14 +63,30 @@ exports.leave = async (req,res,next)=>{
             User.update(userId,user)
             Room.update(roomId,room)
             return res.status(201).json({
-                message:'you have been left this room'
+                message:'you have been unjoin this room'
             })
         }
         throw new Error()
     } catch (error) {
         return res.status(500).json({
             error:error,
-            message:'You are already not joined this room'
+            message:'You are already not unjoined this room'
+        })
+    }
+}
+
+exports.leave = async (req,res,next)=>{
+    const roomId = req.body.roomId
+    const userId = req.headers.user_id
+    try {
+        Room.leave(roomId,userId)
+        return res.status(201).json({
+            message:'you have been left this room'
+        })
+    } catch (error) {
+        return res.status(500).json({
+            error:error,
+            message:'You are already not unjoined this room'
         })
     }
 }

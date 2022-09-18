@@ -1,5 +1,5 @@
 const {User} = require('../models/users')
-const {getDb} = require('../utils/database')
+const {getDb} = require('../config/database')
 
 // require Packges
 const bcrypt = require('bcrypt')

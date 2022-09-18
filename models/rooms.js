@@ -1,11 +1,10 @@
-const { getDb } = require("../utils/database")
+const { getDb } = require("../config/database")
 const mongodb = require('mongodb')
 
 class Room{
     constructor(name){
         this.name = name
         this.users = []
-        this.messages=[]
     }
 
     create(){
@@ -24,6 +23,17 @@ class Room{
         const db = getDb();
         return db.collection('rooms').findOne({_id:new mongodb.ObjectId(roomId)})
     
+    }
+    static async leave(roomId,userId){
+
+        
+            const room = await Room.findById(roomId)
+            const userlist = room.users
+            const userIndex = userlist.findIndex(user=>user.toString() === new mongodb.ObjectId(userId).toString())
+            if(userIndex !== -1){
+                userlist.splice(userIndex,1)
+                Room.update(roomId,room)
+            }
     }
 
 }
