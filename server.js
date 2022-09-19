@@ -15,10 +15,10 @@ const cors = require('cors');
 const path = require('path')
 const {init} = require('./config/socket.io')
 const io = init(server)
+
 //require routes 
 const authRoutes = require('./routes/auth')
 const roomRoutes = require('./routes/room')
-const { webSocket } = require('./utils/socket.io')
 
 
 // parse body
@@ -48,7 +48,6 @@ app.use('*',(req,res,next)=>{
 
 
 //socket
-new webSocket('osama','JavaScript').connection()
 
 const port = process.env.PORT
 

@@ -1,9 +1,17 @@
+const {getDb} = require('../config/database')
 
 
 class Message{
-    constructor(message,user,room){
+    constructor(userName,roomName,message,time){
+        this.userName = userName
+        this.roomName = roomName
         this.message = message
-        this.user = user
-        this.room = room
+        this.time = time
+    }
+    save(){
+        const db = getDb()
+        db.collection('messages').insertOne(this)
     }
 }
+
+exports.Message=Message

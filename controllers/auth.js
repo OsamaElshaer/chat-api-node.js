@@ -23,7 +23,6 @@ const transporter = nodemailer.createTransport(sendgridTransporter({
 exports.singUp = (req,res,next)=>{
     email = req.body.email
     password = req.body.password.toString()
-    const db = getDb()
 
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -31,17 +30,7 @@ exports.singUp = (req,res,next)=>{
             error:errors.array()[0].msg
         })
     }
-    db.
-        collection('users')
-        .find({email:email})
-        .next()
-        .then(user=>{
-            if(user){
-                return res.status(422).json({
-                    message : 'email exist'
-                })
-            }
-            
+
         bcrypt
             .hash(password,12,(err,hash)=>{
                 if(err){
@@ -75,12 +64,6 @@ exports.singUp = (req,res,next)=>{
                             mailResponse : response
                         })
                 })   
-            })
-            })
-            .catch((err)=>{
-            res.status(500).json({
-            message : err
-            })
             })
 }
 

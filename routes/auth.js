@@ -2,6 +2,7 @@
 const express = require('express')
 const router = express.Router()
 const {check,body,validationResult} = require('express-validator')
+const { getDb } = require('../config/database')
 
 // require controllers
 const authController = require('../controllers/auth')
@@ -9,7 +10,13 @@ const authController = require('../controllers/auth')
 // authentication routes
 router.post(
             '/signup',
-            body('email','Please enter a valid email address').isEmail().normalizeEmail(),
+            body('email','Please enter a valid email address').isEmail().normalizeEmail().custom(async value=>{
+                const user = getDb().collection('users').findOne({email:value})
+                if(user){
+                    throw new Error('Email exist')
+                }
+                return true;
+            }),
             body('password','Pleas Entert the password with only numbers and thext and at least 8 characters').isLength({min:8}).isAlphanumeric(),
             body('passwordConfirm').custom((value,{req})=>{
                 if(value !==req.body.password){
