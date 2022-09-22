@@ -6,7 +6,6 @@ const {getIO } = require("../config/socket.io")
 const io = getIO()
 
 const {validationResult}= require('express-validator')
-const { application } = require("express")
 
 exports.create = async (req,res,next)=>{
 

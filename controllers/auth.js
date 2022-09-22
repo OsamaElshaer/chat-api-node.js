@@ -1,5 +1,6 @@
 const {User} = require('../models/users')
 const {getDb} = require('../config/database')
+const {logger} = require('../utils/logger')
 
 // require Packges
 const bcrypt = require('bcrypt')
@@ -26,8 +27,9 @@ exports.singUp = (req,res,next)=>{
 
     const errors = validationResult(req)
     if(!errors.isEmpty()){
+        logger.log('error',errors.array()[0].msg)
         return res.status(400).json({
-            error:errors.array()[0].msg
+            error:errors.array()[0].msg,
         })
     }
 
@@ -43,7 +45,6 @@ exports.singUp = (req,res,next)=>{
                     password = hash
                 )
                 user.save()
-
                 const emailInfo =                     
                 {
                     to:email,

@@ -4,16 +4,18 @@ const router = express.Router()
 const {check,body,validationResult} = require('express-validator')
 const { getDb } = require('../config/database')
 
+
 // require controllers
 const authController = require('../controllers/auth')
+const logger = require('../utils/logger')
 
 // authentication routes
 router.post(
             '/signup',
             body('email','Please enter a valid email address').isEmail().normalizeEmail().custom(async value=>{
-                const user = getDb().collection('users').findOne({email:value})
+                const user = await getDb().collection('users').findOne({email:value})
                 if(user){
-                    throw new Error('Email exist')
+                    throw new Error(`${user.email} Email exist`)
                 }
                 return true;
             }),

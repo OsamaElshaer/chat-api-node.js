@@ -1,3 +1,7 @@
+const logger = require('./utils/logger')
+
+
+
 //setup server
 const express = require('express')
 const app = express()
@@ -41,10 +45,16 @@ app.use('/room', isAuth ,roomRoutes)
 app.use(express.static(path.join(__dirname,'public')))
 
 app.use('*',(req,res,next)=>{
+    logger.warn('warn')
+    logger.error('error')
+    logger.info('log')
+    logger.log('error','this error')
     return res.status(404).json({
         error:"API endpoint not found"
     })
 })
+
+
 
 
 //socket
