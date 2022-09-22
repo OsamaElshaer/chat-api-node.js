@@ -1,6 +1,8 @@
-const logger = require('./utils/logger')
 
 
+//swagger 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 //setup server
 const express = require('express')
@@ -42,13 +44,13 @@ app.use(cors())
 app.use('/user', authRoutes)
 app.use('/room', isAuth ,roomRoutes)
 
+//swagger url
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
 app.use(express.static(path.join(__dirname,'public')))
 
 app.use('*',(req,res,next)=>{
-    logger.warn('warn')
-    logger.error('error')
-    logger.info('log')
-    logger.log('error','this error')
     return res.status(404).json({
         error:"API endpoint not found"
     })

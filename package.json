@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/OsamaElshaer/chat-app#readme",
   "dependencies": {
+    "babel-plugin-module-resolver": "^4.1.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
@@ -32,6 +33,7 @@
     "npm": "^8.19.1",
     "sendgrid": "^5.2.3",
     "socket.io": "^4.5.2",
+    "swagger-ui-express": "^4.5.0",
     "winston": "^3.8.2"
   }
 }
