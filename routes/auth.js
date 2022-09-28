@@ -56,6 +56,6 @@ router.patch(
 
 router.delete('/deleteAccount', authController.deleteAccount)
 
-
+router.get('/',authController.fetchAll)
 
 module.exports = router;

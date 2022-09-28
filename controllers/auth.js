@@ -226,7 +226,20 @@ exports.deleteAccount = (req,res,next)=>{
     }
 }
 
-
+exports.fetchAll =async (req,res,next)=>{
+    try {
+        const users = await getDb().collection('users').find().toArray()
+        return res.status(422).json({
+            coutn:users.length,
+            users:users
+        })
+      
+    } catch (error) {
+        return res.status(422).json({
+            error:error
+        })
+    }
+}
 
 
 
