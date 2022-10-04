@@ -4,7 +4,9 @@
   "description": "chat app",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "_comment":"test :jest --watchAll"
+    
   },
   "repository": {
     "type": "git",
@@ -35,5 +37,12 @@
     "socket.io": "^4.5.2",
     "swagger-ui-express": "^4.5.0",
     "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.3",
+    "jest": "^29.1.1"
+  },
+  "jest":{
+    "collectCoverage":true
   }
 }

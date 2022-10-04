@@ -6,10 +6,9 @@ const client = new MongoClient(url,{ useUnifiedTopology: true })
 
 let db;
 
-async function dbConnection(cb){
+async function dbConnection(){
     await client.connect()
     db = client.db('chat_app')
-    cb()
 }
 
 function getDb(){

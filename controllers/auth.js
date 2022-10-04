@@ -32,7 +32,6 @@ exports.singUp = (req,res,next)=>{
             error:errors.array()[0].msg,
         })
     }
-
         bcrypt
             .hash(password,12,(err,hash)=>{
                 if(err){
@@ -72,7 +71,7 @@ exports.singUp = (req,res,next)=>{
 exports.logIn = (req,res,next)=>{
     const email = req.body.email
     const password = req.body.password.toString()
-    const db = getDb()
+    var db = getDb()
 
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -240,7 +239,6 @@ exports.fetchAll =async (req,res,next)=>{
         })
     }
 }
-
 
 
 

@@ -11,5 +11,4 @@ exports.isAuth = (req,res,next)=>{
             message:'login failed resign in'
         })
     }
-
 }
